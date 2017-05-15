@@ -1,9 +1,10 @@
-import React, { Component} from 'react';
-import Api from './Api';
-import Contenedor from './Contenedor';
-import Accion from './Accion';
+import React, { Component} from 'react'
+import { connect } from 'react-redux'
+import Api from './Api'
+import Contenedor from './Contenedor'
+import Accion from './Accion'
 
-import './estilo.css';
+import './estilo.css'
 
 class MenuPrincipal extends Component {
   constructor(props) {
@@ -15,14 +16,18 @@ class MenuPrincipal extends Component {
   }
 
   async componentDidMount() {
-    let datos = await Api.menu.getLista();
+    let datos = await Api.menu.getLista()
+    this.props.dispatch({
+      type: 'CARGAR_MENU',
+      menuPrincipal: datos
+    })
     this.setState({
       cargando: false,
-      menu: datos,
+      menu: this.props.menuPrincipal,
     });
-    console.log(`datos cargados: ${datos.length}`);
+    console.log(`datos cargados: ${this.state.menu.length}`)
     let menu = [], cont = 0;
-    let raiz = this.state.menu.filter(f=>f.directorio==='9999');
+    let raiz = this.state.menu.filter(f=>f.directorio==='9999')
     let subDirs = (id) => {
       cont++
       let sd = this.state.menu.filter(f=>f.directorio===id)
@@ -72,5 +77,10 @@ class MenuPrincipal extends Component {
     )
   }
 }
+function mapStateToProps(estado) {
+  return {
+    menuPrincipal: estado.menuPrincipal
+  }
+}
 
-export default MenuPrincipal;
+export default connect(mapStateToProps)(MenuPrincipal)

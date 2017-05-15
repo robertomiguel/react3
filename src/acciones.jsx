@@ -1,9 +1,9 @@
-function leerMenu(item) {
-  return {
-    type: 'LEER_MENU',
-    item: item
-  }
-}
+// function leerMenu(item) {
+//   return {
+//     type: 'LEER_MENU',
+//     item: item
+//   }
+// }
 
 function leerNotas(item) {
   return {
@@ -20,5 +20,5 @@ function borrarNotas(item) {
 }
 
 export default {
-  leerMenu, leerNotas, borrarNotas
+  leerNotas, borrarNotas
 }

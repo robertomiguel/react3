@@ -133,7 +133,7 @@ class App extends Component {
 
 function mapStateToProps(estado) {
   return {
-    nota: estado.nota
+    nota: estado.nota,
   }
 }
 

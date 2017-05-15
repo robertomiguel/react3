@@ -1,14 +1,12 @@
 const estadoInicial = {
-  menu: [],
-  nota: []
+  menuPrincipal: [],
+  nota: [],
 }
 function reducer (estado = estadoInicial, accion = {}) {
   switch (accion.type) {
 
     case 'CARGAR_MENU':
-      return {
-        menu: estado.menu
-      }
+      return Object.assign({}, estado, {menuPrincipal: accion.menuPrincipal})
 
       case 'LEER_NOTAS':
         let d = new Date()
@@ -21,9 +19,9 @@ function reducer (estado = estadoInicial, accion = {}) {
         })
 
       case 'BORRAR_NOTAS':
-        return {
+        return Object.assign({}, estado, {
           nota: accion.nota
-        }
+        })
 
     default:
       return estado;
