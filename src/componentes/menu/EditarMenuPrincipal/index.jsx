@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import Api from '../../MenuPrincipal/Api'
+import { connect } from 'react-redux'
 import CargarMenu from './CargarMenu'
 import EditorItemMenu from './EditorItemMenu'
 // import VentanaPopUp from '../../globales/VentanaPopUp'
-import { connect } from 'react-redux'
 import './estilo.css'
 import {plantilla} from './plantilla'
 
@@ -24,12 +23,13 @@ class Contenido extends Component {
   }
 
   async componentDidMount() {
-    let datos = await Api.menu.getLista();
+    let datos = this.props.menuPrincipal
+    let texto = JSON.stringify(datos)
+    let nuevo = JSON.parse(texto)
     this.setState({
-      menu: datos.map((k,i)=>Object.assign(k,{indice:i}) ),
+      menu: nuevo.map((k,i)=>Object.assign(k,{indice:i}) ),
       cargando: false,
     })
-
   }
 
   seleccion = (datos, accion) => {
@@ -119,6 +119,19 @@ class Contenido extends Component {
         }
   }
 
+  compararObj = (item, itemOrig) => {
+    const omitir = "indice,modificar"
+    var cambios = {}
+    var c = ''
+    for(let key in item) {
+      if (item[key]!==itemOrig[key] && omitir.indexOf(key)===-1) {
+        c = JSON.parse(`{ "${key}" : "${item[key]}" }`)
+        cambios = Object.assign(cambios, c)
+      }
+    }
+    return Object.assign(cambios, {id:item.id})
+  }
+
   grabar = () => {
     this.setState ({
       abm: {
@@ -131,7 +144,8 @@ class Contenido extends Component {
                     invisible: m.visible}
                 )),
         b: this.state.menu.filter(f=>f.eliminar).map(m=>m.id),
-        m: this.state.menu.filter(f=>f.modificar).filter(f=>!f.eliminar),
+        m: this.state.menu.filter(f=>f.modificar).filter(f=>!f.eliminar)
+                          .map(m=> this.compararObj(m, this.props.menuPrincipal[m.indice])),
       }
     })
 
@@ -174,7 +188,8 @@ class Contenido extends Component {
 
 function mapStateToProps(estado) {
   return {
-    nota: estado.nota
+    nota: estado.nota,
+    menuPrincipal: estado.menuPrincipal
   }
 }
 
